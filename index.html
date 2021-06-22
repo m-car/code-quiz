@@ -8,33 +8,30 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="">
-    <header>
+    <header id="header">
         <h1>Welcome to Code Quiz!</h1>
-        <nav>
-            <ol>
-                <li>my github</li>
-                <li>contact me</li>
-                <li>more games!</li>
-            </ol>
-        </nav>
     </header>
-    <section class="game-container">
-        <div class="question-box"> questions
-            <!-- insert questions from pool of questions via js -->
-            <p>css default text</p> 
+    <section id="game-container">
+        <div id="question-box"> questions
 
         </div>
-        <div class="answer-list">   answers
+
+        <div id="answer-box"> answers
             <ol>
-                <!-- insert li tags here via JS. Answers. as a button  -->
+               
             </ol>
         </div>
+
         <div>
             <button id="start-button">Start</button>
             <button id="reset-button">Reset</button>
-            <div class="scoreboard">
-                SCOREBOARD
-            </div>
+            
+        </div>
+        <div id='timer'>Time Left: <span>0</span>
+        </div>
+
+        <div id="scoreboard">
+            SCOREBOARD
         </div>
         
     </section>
