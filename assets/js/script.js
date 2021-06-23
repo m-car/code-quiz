@@ -3,6 +3,9 @@ console.log(window);
 
 console.log('Document Body: ');
 console.log(document.body);
+var wins= 0;
+var highscore = 0;
+
 
 //Selector Declarations
 var divTags = document.querySelectorAll('div');
@@ -13,6 +16,7 @@ var startEl = document.getElementById('start-button');
 var resetEl = document.getElementById('reset-button');
 var scoreBrd = document.getElementById('scoreboard');
 var timerEl = document.getElementById('timer');
+var highScore = document.getElementById('highscore');
 
 //Answer Buttons Declaration
 var btnEl1 = document.createElement('button');
@@ -24,6 +28,22 @@ btnEl3.setAttribute('id','btn3')
 var btnEl4 = document.createElement('button');
 btnEl4.setAttribute('id','btn4')
 
+
+//Answer Button Listeners
+
+btnEl1.addEventListener('click', function(event){
+    checkQuestion(event,currentQuestion.a1);
+})
+btnEl2.addEventListener('click', function(event){
+     checkQuestion(event,currentQuestion.a2)
+})
+btnEl3.addEventListener('click', function(event){
+    checkQuestion(event,currentQuestion.a3)
+})
+btnEl4.addEventListener('click', function(event){
+    checkQuestion(event,currentQuestion.a4)
+})
+
 //QUESTION/ANSWER OBJECTS. 
 var question1 = {
     q: "Inside which HTML element do we put the JavaScript?",
@@ -33,7 +53,6 @@ var question1 = {
     a4: '<js>',
     correct: '<script>',
 }
-
 var question2 = {
     q: "What is the correct JavaScript syntax to change the content of the HTML element below? \n<p id=\"demo\">This is a demonstration.</p>",
     a1: 'document.getElementById("demo").innerHTML = "Hello World!"',
@@ -42,7 +61,6 @@ var question2 = {
     a4: 'document.getElement("p").innerHTML = "Hello World!"',
     correct:'document.getElementById("demo").innerHTML = "Hello World!"',
 }
-
 var question3 = {
     q: "Where is the correct place to insert a JavaScript?",
     a1: 'Both the <head> section and the <body> section are correct.',
@@ -102,14 +120,11 @@ divTags[1].setAttribute('style','font-size: 20px; font-weight: bold; ');
 // answerbox.style.display ='column';
 
 
-
-
-var wins= 0;
-var highscore = 0;
 // Landing Page starting Content
 questionBox.textContent = 'questions will go here. Push Start!';
 answerbox.textContent = 'answers will go here';
-scoreBrd.textContent = 'wins:'+ wins +'highScore:' + highscore;
+scoreBrd.textContent = 'wins:'+ wins;
+highScore.textContent = 'high score: ' + localStorage.getItem('highScore');
 
 
 
@@ -119,9 +134,11 @@ scoreBrd.textContent = 'wins:'+ wins +'highScore:' + highscore;
 //Timer
 //TODO TIMER NEEDS TO RESTART WHEN START IS CLICKED
 var secondsLeft;
+var timerInterval;
 function timer(){
-    secondsLeft = 90;
-    var timerInterval = setInterval(function(){
+    secondsLeft = 15;
+    // clearInterval(timerInterval); //does not work as expected. need to stop countdown interval. its doubling up if start is clicked multiple times
+    timerInterval = setInterval(function(){
         if (secondsLeft < 0){
             clearInterval(timerInterval);
             alert('OUT OF TIME');
@@ -133,15 +150,21 @@ function timer(){
     },1000) 
 }
 
-//Random Generator
-// function rand(max){
-//     return Math.floor(Math.random() * max);
-// }
 var currentQuestion;
 var questionIndex = 0;
-//Select random question object, and display question and answers on page
+
+// function checkGameOver(){
+//     if(secondsLeft == 0){
+//         alert("game over!");
+
+//     }
+// }
+
+
+
 function questionRoll(){
-    //questions selected and displayed from a pool of questions RANDOMLY
+    //questions selected and displayed from a pool of questions 
+    // checkGameOver();
     questionIndex = (questionIndex + 1) % questionBank.length;
     questionBox.textContent= questionBank[questionIndex].q;
     currentQuestion = questionBank[questionIndex]
@@ -158,18 +181,26 @@ function questionRoll(){
     
     btnEl4.textContent = questionBank[questionIndex].a4;
     answerbox.appendChild(btnEl4);
-    //TODO push answers into list elements, that are buttons
+    
 }
-
-// when I click START QUIZ ,
+function checkHighScore(){
+    if(wins>highScore){
+        alert("new high score");
+        user.name = prompt("enter initials");
+    }
+}
+// when I click START QUIZ 
 startEl.addEventListener('click', function(){
     //reset text on page
+    wins = 0;
+    scoreBrd.textContent = 'wins:'+ wins;
     questionBox.textContent = '';
     answerbox.textContent='';
     //start timer //TODO TIMER NEEDS TO RESTART WHEN START IS CLICKED
     timer();
     //display question/answers
     questionRoll();
+    checkHighScore();
     
 })
 
@@ -180,45 +211,21 @@ function checkQuestion(event, answer){
         console.log("CORRECT");
         wins++;
         scoreBrd.textContent = 'wins:'+ wins;
-        localStorage.setItem('highscore', JSON.stringify(wins))
     }else{
         console.log("INCORRECT");
     }
+    if (wins > highscore){
+        localStorage.setItem('highscore', JSON.stringify(wins))
+        user.highscore = wins;
+        
+    }
     questionRoll();
+    highScore.textContent = 'high score:' + localStorage.getItem('highscore', JSON.stringify(highscore));
 
 }
 
 
 
-
-
-
-//MAYBE compare object property NAME instead of value .. LESS TYPING
-
-btnEl1.addEventListener('click', function(event){
-    checkQuestion(event,currentQuestion.a1);
-    //if wins > highscore , update highscore
-
-})
-btnEl2.addEventListener('click', function(event){
-     checkQuestion(event,currentQuestion.a2)
-    //adjust session score. wins losses 
-
-    //if wins > highscore , update highscore
-
-})
-btnEl3.addEventListener('click', function(event){
-    checkQuestion(event,currentQuestion.a3)
-    //if wins > highscore , update highscore
-
-})
-btnEl4.addEventListener('click', function(event){
-    checkQuestion(event,currentQuestion.a4)
-
-    //if wins > highscore , update highscore
-
-    
-})
 
 
 // if timer < 0 stop game  
