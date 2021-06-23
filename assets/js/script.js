@@ -165,10 +165,10 @@ var questionIndex = 0;
 
 
 function questionRoll(){
-    //questions selected and displayed from a pool of questions 
-    // checkGameOver();
     
-    questionIndex = (questionIndex + 1) % questionBank.length;
+    
+    //questions selected and displayed from a pool of questions 
+  
     questionBox.textContent= questionBank[questionIndex].q;
     currentQuestion = questionBank[questionIndex]
     
@@ -184,6 +184,7 @@ function questionRoll(){
     
     btnEl4.textContent = questionBank[questionIndex].a4;
     answerbox.appendChild(btnEl4);
+    questionIndex = (questionIndex + 1);
     
 }
 function checkHighScore(){
@@ -195,6 +196,7 @@ function checkHighScore(){
 // when I click START QUIZ 
 startEl.addEventListener('click', function(){
     //reset text on page
+    questionIndex = 0;
     gameStatus = true;
     wins = 0;
     scoreBrd.textContent = 'wins:'+ wins;
@@ -224,7 +226,16 @@ function checkQuestion(event, answer){
             user.highscore = wins;
             
         }
+        if(questionIndex >= questionBank.length){
+            alert('game over');
+            
+            gameStatus=false;
+        }
+        
         questionRoll();
+
+        
+
         highScore.textContent = 'high score:' + localStorage.getItem('highscore', JSON.stringify(highscore));
     }else{
         alert("Game Over: Press 'Start' again");
