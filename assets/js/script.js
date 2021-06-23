@@ -5,6 +5,7 @@ console.log('Document Body: ');
 console.log(document.body);
 var wins= 0;
 var highscore = 0;
+var gameStatus = false;
 
 
 //Selector Declarations
@@ -136,12 +137,13 @@ highScore.textContent = 'high score: ' + localStorage.getItem('highScore');
 var secondsLeft;
 var timerInterval;
 function timer(){
+    clearInterval(timerInterval);
     secondsLeft = 15;
-    // clearInterval(timerInterval); //does not work as expected. need to stop countdown interval. its doubling up if start is clicked multiple times
     timerInterval = setInterval(function(){
         if (secondsLeft < 0){
             clearInterval(timerInterval);
-            alert('OUT OF TIME');
+            alert('Game Over: Out of time. ');
+            gameStatus = false;
         }else{
             
             timerEl.children[0].textContent = secondsLeft;
@@ -165,6 +167,7 @@ var questionIndex = 0;
 function questionRoll(){
     //questions selected and displayed from a pool of questions 
     // checkGameOver();
+    
     questionIndex = (questionIndex + 1) % questionBank.length;
     questionBox.textContent= questionBank[questionIndex].q;
     currentQuestion = questionBank[questionIndex]
@@ -192,6 +195,7 @@ function checkHighScore(){
 // when I click START QUIZ 
 startEl.addEventListener('click', function(){
     //reset text on page
+    gameStatus = true;
     wins = 0;
     scoreBrd.textContent = 'wins:'+ wins;
     questionBox.textContent = '';
@@ -206,23 +210,25 @@ startEl.addEventListener('click', function(){
 
 function checkQuestion(event, answer){
     console.log(event);
-    
-    if(answer == currentQuestion.correct){
-        console.log("CORRECT");
-        wins++;
-        scoreBrd.textContent = 'wins:'+ wins;
+    if (gameStatus === true){
+        if(answer == currentQuestion.correct){
+            console.log("CORRECT");
+            wins++;
+            scoreBrd.textContent = 'wins:'+ wins;
+        }else{
+            console.log("INCORRECT");
+            secondsLeft = secondsLeft - 3;
+        }
+        if (wins > highscore){
+            localStorage.setItem('highscore', JSON.stringify(wins))
+            user.highscore = wins;
+            
+        }
+        questionRoll();
+        highScore.textContent = 'high score:' + localStorage.getItem('highscore', JSON.stringify(highscore));
     }else{
-        console.log("INCORRECT");
-        secondsLeft = secondsLeft - 3;
+        alert("Game Over: Press 'Start' again");
     }
-    if (wins > highscore){
-        localStorage.setItem('highscore', JSON.stringify(wins))
-        user.highscore = wins;
-        
-    }
-    questionRoll();
-    highScore.textContent = 'high score:' + localStorage.getItem('highscore', JSON.stringify(highscore));
-
 }
 
 
