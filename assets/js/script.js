@@ -125,7 +125,9 @@ divTags[1].setAttribute('style','font-size: 20px; font-weight: bold; ');
 questionBox.textContent = 'questions will go here. Push Start!';
 answerbox.textContent = 'answers will go here';
 scoreBrd.textContent = 'wins:'+ wins;
-highScore.textContent = 'high score: ' + localStorage.getItem('highScore');
+highscore = localStorage.getItem('highScore');
+
+highScore.textContent = 'high score: ' + highscore;
 
 
 
@@ -230,8 +232,9 @@ function checkQuestion(event, answer){
             alert('game over');
             
             gameStatus=false;
+            checkHighScore();
         }
-        
+
         questionRoll();
 
         
@@ -246,5 +249,5 @@ function checkQuestion(event, answer){
 
 
 
-// if timer < 0 stop game  
-//alert player with scoreboard
+
+
