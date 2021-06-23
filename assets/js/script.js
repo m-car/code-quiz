@@ -213,6 +213,7 @@ function checkQuestion(event, answer){
         scoreBrd.textContent = 'wins:'+ wins;
     }else{
         console.log("INCORRECT");
+        secondsLeft = secondsLeft - 3;
     }
     if (wins > highscore){
         localStorage.setItem('highscore', JSON.stringify(wins))
